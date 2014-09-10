@@ -7,7 +7,7 @@ buildscript {
   }
 
   dependencies {
-    classpath group:"com.marklogic", name:"ml-gradle", version:"0.2"
+    classpath group:"com.marklogic", name:"ml-gradle", version:"0.4"
   }
 }
 
@@ -15,13 +15,15 @@ apply plugin: 'ml-gradle'
 
 ext {
 
+  mlUsername = "admin"
+  mlPassword = "admin"
+
   mlAppConfig {
     name = "geonames"
     host = "localhost"
-    username = "admin"
-    password = "admin"
     restPort = 8010
     xdbcPort = 8011
   }
 
 }
+
