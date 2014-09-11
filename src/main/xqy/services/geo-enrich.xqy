@@ -11,7 +11,7 @@ declare namespace html = "http://www.w3.org/1999/xhtml";
 
 declare option xdmp:mapping "false";
 
-declare variable $HIGHEST-POPULATION := fn:true();
+declare variable $HIGHEST-POPULATION := fn:false();
 declare variable $ONLY-POSITIVE-POPULATION := fn:false();
 
 declare variable $USE-POPULATION := $HIGHEST-POPULATION or $ONLY-POSITIVE-POPULATION;
