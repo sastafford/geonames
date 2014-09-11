@@ -1,12 +1,13 @@
-<div class="header"><img class="pull-right" src="/images/marklogic.png" alt="MarkLogic">
-<h1>GeoNames</h1></div>
-<div class="row">
-  <div class="search">
+<div class="header"><img src="/images/MarkFind.png" alt="MarkLogic">
+<div class="row search">
+  <div>
     <textarea class="form-control" rows="3" ng-model="model.text"></textarea>
     <select class="form-control pull-left" ng-model="model.code" ng-options="country.ISO as country.Country for country in model.countries"><option value="world">World</option></select>
     <select class="form-control pull-left" ng-model="model.feature" ng-options="feature.name for feature in model.features"></select>
     <button type="submit" class="btn btn-default pull-left" ng-click="search()">Submit</button>
   </div>
+</div>
+<div class="row">
   <div>
     <div ng-bind-html="renderQuery()"></div>
     <div ng-repeat="result in model.search.summary['id-counts'].geonamegroup" class="results">
