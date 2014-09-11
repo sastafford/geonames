@@ -1,9 +1,0 @@
-*.zip
-data/
-.project
-.gradle
-build/
-node/node_modules
-node/ui/app/bower_components
-.idea
-node/dist
