@@ -1,0 +1,45 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    maven {url "https://developer.marklogic.com/maven2/"}
+    maven {url "http://rjrudin.github.io/marklogic-java/releases"}
+    mavenLocal()
+  }
+
+  dependencies {
+    classpath group:"com.marklogic", name:"ml-gradle", version:"0.4"
+  }
+}
+
+apply plugin: 'ml-gradle'
+
+repositories {
+   maven {url "http://sastafford.github.io/geonames/releases"}
+   maven {url "http://rjrudin.github.io/marklogic-java/releases"}
+}
+
+dependencies {
+  mlRestApi "com.marklogic:geonames:0.3"
+  mlRestApi "com.marklogic:obi-xquery:0.0.1"
+}
+
+
+ext {
+  
+  mlUsername = "admin"
+  mlPassword = "admin"
+
+  mlAppConfig {
+    name = "test"
+    host = "localhost"
+    restPort = 8020
+    xdbcPort = 8021
+  }
+  
+  mlManageConfig {
+    contentDatabaseFilePath = "build/merged-content-database.xml"
+  }
+
+}
+
+mlMergeDatabasePackages.mergePackageFilePaths = ["build/mlRestApi/obi/packages/content-database.xml", "build/mlRestApi/geonames/packages/content-database.xml"]
