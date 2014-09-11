@@ -17,6 +17,7 @@ apply plugin: 'maven-publish'
 ext {
   
   pubVersion = project.hasProperty("pubVersion") ? project.getProperty("pubVersion") : "0.3." + java.util.Calendar.getInstance().getTimeInMillis()
+  geonamesVersion = "0.3"
   
   mlUsername = "admin"
   mlPassword = "admin"
@@ -51,15 +52,13 @@ publishing {
     mainXquery(MavenPublication) {
       groupId 'com.marklogic'
       artifactId 'geonames'
-      version pubVersion
+      version geonamesVersion
       artifact xqueryZip
     }
     repositories {
       maven {
-        if (project.hasProperty("nexusPublish")) {
-          url "file:///usr/local/sonatype-work/nexus/storage/snapshots"
-        } else if (project.hasProperty("release")) {
-          url "file://$projectDir/../../gh-pages-marklogic-java/releases"
+        if (project.hasProperty("release")) {
+          url "file://$projectDir/../geonames-gh-pages/releases"
         }
         else {
           url mavenLocal().url
