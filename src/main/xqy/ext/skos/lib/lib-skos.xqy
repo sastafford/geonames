@@ -10,6 +10,7 @@ declare namespace skos = "http://www.w3.org/2004/02/skos/core#";
 declare option xdmp:mapping "false";
 
 declare variable $SKIP-DEPRECATED-CATEGORIES := fn:true();
+declare variable $ORDER-PATHS-BY-FREQUENCY := fn:true();
 
 
 declare function skoslib:insert-rdf-from-file($filepath as xs:string) as empty-sequence()
@@ -76,10 +77,30 @@ declare function skoslib:categorize($doc as element(), $params as map:map)
   as document-node()
 {
   let $hits := cts:search(/rdf:Description, cts:reverse-query($doc), "unfiltered")
-  let $log := xdmp:log("hits: " || fn:count($hits))
+
+  (: 3 checks on $ORDER-PATHS-BY-FREQUENCY and 3 extra things to do:
+     count frequency of matching terms, add frequency attribute, sort descending on attribute  :)
   let $paths :=
     for $hit in $hits
-    return $hit/mlskos:path
+    let $frequency :=
+      if ($ORDER-PATHS-BY-FREQUENCY) then
+        skoslib:match-frequency($doc, cts:query($hit/mlskos:query/*))
+      else
+        0
+    for $path in $hit/mlskos:path
+    return
+      if ($ORDER-PATHS-BY-FREQUENCY) then
+        <mlskos:path frequency="{ $frequency }">{ fn:data($path) }</mlskos:path>
+      else
+        $path
+  let $paths :=
+    if ($ORDER-PATHS-BY-FREQUENCY) then
+      for $path in $paths
+      order by xs:integer($path/@frequency) descending
+      return $path
+    else
+      $paths
+
   let $docpaths :=
     fn:distinct-values(
       for $path in $paths
@@ -97,4 +118,11 @@ declare function skoslib:categorize($doc as element(), $params as map:map)
         $paths, $docpaths
       }
     }
+};
+
+declare function skoslib:match-frequency($doc as element(), $query as cts:query)
+  as xs:integer
+{
+  let $highlighted := cts:highlight($doc, $query, <hit>{$cts:text}</hit>)
+  return fn:count($highlighted//hit)
 };
