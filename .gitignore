@@ -7,3 +7,4 @@ node/node_modules
 node/ui/app/bower_components
 .idea
 node/dist
+src/main/resources/geonames/
