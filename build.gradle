@@ -35,6 +35,13 @@ apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
+ext {
+  isGeonamesBuild = project.hasProperty("geonames")
+
+  marklogicJavaVersion = "0.9.4"
+  snapshotVersion = "0.SNAPSHOT.+"
+}
+
 repositories {
   mavenLocal()
   mavenCentral()
@@ -43,36 +50,44 @@ repositories {
   maven { url "https://repository.cloudera.com/artifactory/cloudera-repos/" }
 }
 
+configurations {
+  mlcp
+}
+
 dependencies {
   compile 'com.marklogic:ml-java:' + marklogicJavaVersion
   compile 'org.codehaus.groovy:groovy-all:2.3.7'
   compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7'
   compile 'org.apache.httpcomponents:httpclient:4.3.5'
-}
 
-task getGeonamesMeta(dependsOn: 'classes', type: JavaExec) {
-  main = 'getGeonamesMeta'
-  classpath = sourceSets.main.runtimeClasspath
-}
-
-/*
-ext {
-  pubVersion = project.hasProperty("pubVersion") ? project.getProperty("pubVersion") : "0.3." + java.util.Calendar.getInstance().getTimeInMillis()
-  sweetVersion = "0.1"
-}
-
-configurations {
-  xquery
-  mlcp
-}
-
-dependencies {
-  mlcp('com.marklogic.mlcp-Hadoop2:1.2-3') {
+  mlcp('com.marklogic:mlcp-Hadoop2:1.2-3') {
     exclude module:"commons-modeler"
   }
   mlcp('commons-modeler:commons-modeler:2.0') {
     transitive = false
   }
+}
+
+if (isGeonamesBuild) {
+  task getGeonamesMeta(dependsOn: 'classes', type: JavaExec) {
+    main = 'getGeonamesMeta'
+    classpath = sourceSets.main.runtimeClasspath
+  }
+
+  task ingestAdmin1Codes(type: com.marklogic.gradle.task.MlcpTask) {
+    classpath = configurations.mlcp
+    command = "IMPORT"
+    input_file_path = "src/main/resources/geonames/admin1CodesASCII.txt"
+    input_file_type = "delimited_text"
+    output_collections = "geonames,admin1Code"
+    delimited_root_name = "admin1Code"
+    namespace = "http://geonames.org/admin1Code"
+    options_file = "src/main/scripts/geonames/options.txt"
+    output_uri_prefix = "/geonames/admin1Code"
+    transform_module = "/ext/geonames/lib/lib-admin1-codes.xqy"
+    transform_namespace = "http://geonames.org/admin1Code"
+  }
+
 }
 
 task xqueryZip(type: Zip) {
@@ -82,6 +97,7 @@ task xqueryZip(type: Zip) {
   baseName "geonames"
 }
 
+/*
 artifacts {
   xquery xqueryZip
 }
