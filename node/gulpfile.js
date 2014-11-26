@@ -25,7 +25,7 @@ var uglify = require('gulp-uglify');
 
 var options = {
   appPort: argv['app-port'] || 8070,
-  mlHost: argv['ml-host'] || 'geonames.demo.marklogic.com',
+  mlHost: argv['ml-host'] || 'localhost',
   mlPort: argv['ml-port'] || '8010'
 };
 
