@@ -6,7 +6,7 @@ The MarkLogic geonames project is a simple location extractor and enrichment ser
 --------
 1. [MarkLogic](http://developer.marklogic.com/products)
 2. [JDK 1.7](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) 
-3. [Gradle 2.0](http://www.gradle.org/downloads)
+3. [Gradle 2.1](http://www.gradle.org/downloads)
 
 ### Instructions
 1. gradle mlDeploy
