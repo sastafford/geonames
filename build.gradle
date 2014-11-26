@@ -128,6 +128,9 @@ if (isGeonamesBuild) {
     transform_module = "/ext/geonames/lib/lib-feature-codes.xqy"
     transform_namespace = "http://geonames.org/featureCodes"
   }
+
+  task ingestGeonamesLookups(dependsOn: ['getGeonamesMeta', 'ingestAdmin1Codes', 'ingestAdmin2Codes', 'ingestCountryCodes', 'ingestFeatureCodes'])
+
 }
 
 task xqueryZip(type: Zip) {
