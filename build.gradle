@@ -88,6 +88,21 @@ if (isGeonamesBuild) {
     transform_namespace = "http://geonames.org/admin1Code"
   }
 
+  task ingestAdmin2Codes(type: com.marklogic.gradle.task.MlcpTask) {
+    classpath = configurations.mlcp
+    command = "IMPORT"
+    input_file_path = "src/main/resources/geonames/admin2Codes.txt"
+    input_file_type = "delimited_text"
+    output_collections = "geonames,admin2Code"
+    delimited_root_name = "admin2-code"
+    delimited_uri_id = "admin2-code"
+    namespace = "http://geonames.org/admin2Code"
+    options_file = "src/main/scripts/geonames/options.txt"
+    output_uri_prefix = "/geonames/admin2Code"
+    transform_module = "/ext/geonames/lib/lib-admin2-codes.xqy"
+    transform_namespace = "http://geonames.org/admin2Code"
+  }
+
 }
 
 task xqueryZip(type: Zip) {
