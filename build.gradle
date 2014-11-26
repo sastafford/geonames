@@ -1,38 +1,78 @@
+if (project.hasProperty("env")) {
+  apply from: project.property("env") + ".gradle"
+}
+
+try {
+  apply from: "local.gradle"
+  println "Applied local.gradle file"
+} catch (Exception e) {
+  println "Couldn't find local.gradle;  Create this gitignore'd file to override properties if necessary"
+}
+
 buildscript {
+  ext {
+    marklogicJavaVersion = "0.9.4"
+    //marklogicJavaVersion = "0.SNAPSHOT.+"
+    marklogicRepository = "http://rjrudin.github.io/marklogic-java/releases"
+  }
+
   repositories {
     mavenCentral()
     maven {url "https://developer.marklogic.com/maven2/"}
-    maven {url "http://rjrudin.github.io/marklogic-java/releases"}
+    maven {url marklogicRepository }
     mavenLocal()
   }
 
   dependencies {
-    classpath group:"com.marklogic", name:"ml-gradle", version:"0.4"
+    classpath group:"com.marklogic", name:"ml-gradle", version:marklogicJavaVersion
+    classpath "commons-cli:commons-cli:1.2"
   }
 }
 
 apply plugin: 'ml-gradle'
 apply plugin: 'maven-publish'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'java'
 
+repositories {
+  mavenLocal()
+  mavenCentral()
+  maven { url "http://developer.marklogic.com/maven2/" }
+  maven { url "http://rjrudin.github.io/marklogic-java/releases" }
+  maven { url "https://repository.cloudera.com/artifactory/cloudera-repos/" }
+}
+
+dependencies {
+  compile 'com.marklogic:ml-java:' + marklogicJavaVersion
+  compile 'org.codehaus.groovy:groovy-all:2.3.7'
+  compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7'
+  compile 'org.apache.httpcomponents:httpclient:4.3.5'
+}
+
+task getGeonamesMeta(dependsOn: 'classes', type: JavaExec) {
+  main = 'getGeonamesMeta'
+  classpath = sourceSets.main.runtimeClasspath
+}
+
+/*
 ext {
-  
   pubVersion = project.hasProperty("pubVersion") ? project.getProperty("pubVersion") : "0.3." + java.util.Calendar.getInstance().getTimeInMillis()
-  geonamesVersion = "0.3"
-  
-  mlUsername = "admin"
-  mlPassword = "admin"
-
-  mlAppConfig {
-    name = "geonames"
-    host = "localhost"
-    restPort = 8010
-    xdbcPort = 8011
-  }
-
+  sweetVersion = "0.1"
 }
 
 configurations {
-  	xquery
+  xquery
+  mlcp
+}
+
+dependencies {
+  mlcp('com.marklogic.mlcp-Hadoop2:1.2-3') {
+    exclude module:"commons-modeler"
+  }
+  mlcp('commons-modeler:commons-modeler:2.0') {
+    transitive = false
+  }
 }
 
 task xqueryZip(type: Zip) {
@@ -44,15 +84,14 @@ task xqueryZip(type: Zip) {
 
 artifacts {
   xquery xqueryZip
- }
-
+}
 
 publishing {
   publications {
     mainXquery(MavenPublication) {
       groupId 'com.marklogic'
-      artifactId 'geonames'
-      version geonamesVersion
+      artifactId 'sweet'
+      version sweetVersion
       artifact xqueryZip
     }
     repositories {
@@ -68,4 +107,4 @@ publishing {
   }
 }
 
-
+*/
