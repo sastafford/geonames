@@ -1,4 +1,9 @@
 <options xmlns="http://marklogic.com/appservices/search">
+  <values name="country">
+    <range type="xs:string">
+      <element ns="http://geonames.org/countryInfo" name="ISO" />
+    </range>
+  </values>
 	<concurrency-level>8</concurrency-level>
 	<debug>0</debug>
 	<page-length>10</page-length>
