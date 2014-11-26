@@ -55,11 +55,12 @@ configurations {
 }
 
 dependencies {
+  compile 'commons-cli:commons-cli:1.2'
+  compile 'org.apache.ant:ant:1.9.4'
   compile 'com.marklogic:ml-java:' + marklogicJavaVersion
   compile 'org.codehaus.groovy:groovy-all:2.3.7'
   compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7'
   compile 'org.apache.httpcomponents:httpclient:4.3.5'
-
   mlcp('com.marklogic:mlcp-Hadoop2:1.2-3') {
     exclude module:"commons-modeler"
   }
@@ -131,6 +132,25 @@ if (isGeonamesBuild) {
 
   task ingestGeonamesLookups(dependsOn: ['getGeonamesMeta', 'ingestAdmin1Codes', 'ingestAdmin2Codes', 'ingestCountryCodes', 'ingestFeatureCodes'])
 
+  task downloadGeonames(dependsOn: 'classes', type: JavaExec) {
+    main = "downloadGeonames"
+    classpath = sourceSets.main.runtimeClasspath
+    args "-c", country
+  }
+  
+  task ingestGeonames(dependsOn: 'downloadGeonames', type: com.marklogic.gradle.task.MlcpTask) {
+    classpath = configurations.mlcp
+    command = "IMPORT"
+    input_file_path = "src/main/resources/geonames/data/" + country + "/" + country + ".txt"
+    input_file_type = "delimited_text"
+    output_collections = "geonames,feature," + country
+    delimited_root_name = "feature"
+    namespace = "http://geonames.org"
+    options_file = "src/main/scripts/geonames/options.txt"
+    output_uri_prefix = "/geonames/" + country
+    transform_module = "/ext/geonames/lib/lib-geonames.xqy"
+    transform_namespace = "http://geonames.org"
+  }
 }
 
 task xqueryZip(type: Zip) {
