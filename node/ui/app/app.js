@@ -1,7 +1,7 @@
 
 angular.module('geonames', [
   'ngRoute', 'ngCkeditor', 'geonames.search', 'geonames.common', 'geonames.detail',
-  'ui.bootstrap'
+  'ui.bootstrap','ngSanitize'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 

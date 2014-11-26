@@ -1,12 +1,42 @@
-<h1>MarkLogic Geonames</h1>
+<div class="header">
+  <img src="/images/MarkFind.png" alt="MarkLogic">
+</div>
+<div class="row search">
+  <div>
+    <textarea class="form-control" rows="3" ng-model="model.text"></textarea>
+    <select class="form-control pull-left" ng-model="model.code" ng-options="country.ISO as country.Country for country in model.countries"><option value="world">World</option></select>
+    <select class="form-control pull-left" ng-model="model.feature" ng-options="feature.name for feature in model.features"></select>
+    <button type="submit" class="btn btn-default pull-left" ng-click="search()">Submit</button>
+  </div>
+</div>
 <div class="row">
   <div>
-    <input ng-model="model.text" /> <input ng-model="model.code">
-    <button type="submit" class="btn btn-default" ng-click="search()">Submit</button>
-  </div>
-  <div>
-    <pre>
-{{model.search}}
-      </pre>
+    <div ng-bind-html="renderQuery()"></div>
+    <div ng-repeat="result in model.search.summary['id-counts'].geonamegroup" class="results">
+      <h4 ng-bind="result.querymatch"></h4>
+      <div ng-repeat="match in result.geonameidlist.geoname">
+        <div class="row">
+          <div class="col-md-11 col-sm-offset-1">
+            <a ng-href="http://www.geonames.org/{{match.id}}/" ng-repeat='name in match.names.name | filter:{tag: "main"}' ng-bind="name._value"></a>,
+            <a ng-href="http://www.geonames.org/{{getCountryGeonamesIdByCode(match['country-code'])}}" ng-bind="getCountryByCode('{{match['country-code']}}')"></a>,
+            <a ng-href="http://www.geonames.org/{{match['admin1-code'].geonamesid}}/" ng-bind="getMain(match['admin1-code'].name)"></a>,
+            <a ng-href="http://www.geonames.org/{{match.admin2.geonamesid}}/" ng-bind="getMain(match.admin2.name)"></a>,
+            <span ng-bind="match['feature-code'].name"></span>
+          </div>
+        </div>
+        <div class="row">
+            <div class="small col-sm-10 col-sm-offset-2">
+              <span ng-repeat="name in match.names.name">{{name._value}}, </span>
+            </div>
+        </div>
+        <div class="row">
+          <div class="small col-sm-10 col-sm-offset-2">
+            <span ng-bind="match.Point.pos"></span>
+          </div>
+        </div>
+
+      </div>
+
+   </div>
   </div>
 </div>

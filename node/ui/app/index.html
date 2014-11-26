@@ -42,12 +42,24 @@
     </nav>
     -->
     <!-- Add your site or application content here -->
+    <div class="navbar navbar-default navbar-fixed-top bar" role="navigation">
+      <div class="container">
+        <div class="navbar-header"></div>
+      </div>
+    </div>
+
     <div class="container" ng-view=""></div>
 
+    <div class="footer">
+      <div class="container">
+        <p class="text-muted">Copyright &copy; 2014 MarkLogic Corporation. All Rights Reserved. MARKLOGIC® is a registered trademark of MarkLogic Corporation. </p>
+      </div>
+    </div>
 
     <!-- build:js scripts/plugins.js -->
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
     <script src="bower_components/ckeditor/ckeditor.js"></script>
