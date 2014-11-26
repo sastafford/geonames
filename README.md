@@ -8,10 +8,12 @@ The MarkLogic geonames project is a simple location extractor and enrichment ser
 2. [JDK 1.7](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) 
 3. [Gradle 2.1](http://www.gradle.org/downloads)
 
-### Instructions
+### Instructions - Initial Setup (one time only)
 1. gradle mlDeploy
 2. gradle -Pgeonames=true ingestGeonamesLookups
-3. gradle -Pgeonames=true -Pcountry=<ISO 2 character code> ingestGeonames
+
+### Load the geonames data for a country
+3. gradle -Pgeonames=true -Pcountry=[ISO 2 character code] ingestGeonames
 
 ### API
 * Geonames API - http://<HOST>:8010/v1/resources/api
