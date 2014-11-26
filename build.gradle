@@ -114,6 +114,20 @@ if (isGeonamesBuild) {
     options_file = "src/main/scripts/geonames/options.txt"
     output_uri_prefix = "/geonames/country"
   }
+
+  task ingestFeatureCodes(type: com.marklogic.gradle.task.MlcpTask) {
+    classpath = configurations.mlcp
+    command = "IMPORT"
+    input_file_path = "src/main/resources/geonames/featureCodes_en.txt"
+    input_file_type = "delimited_text"
+    output_collections = "geonames,featureCodes"
+    delimited_root_name = "feature-code"
+    namespace = "http://geonames.org/featureCodes"
+    options_file = "src/main/scripts/geonames/options.txt"
+    output_uri_prefix = "/geonames/featureCodes"
+    transform_module = "/ext/geonames/lib/lib-feature-codes.xqy"
+    transform_namespace = "http://geonames.org/featureCodes"
+  }
 }
 
 task xqueryZip(type: Zip) {
